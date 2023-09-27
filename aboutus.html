@@ -332,59 +332,110 @@
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <form method="post" id="download-form">
-        <div class="modal-content border-0 rounded-0">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Download Brochure</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-content border-0 rounded-0">
+              <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">Download Brochure</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <div class="mb-3">
+                      <label for="name" class="form-label">Name</label>
+                      <input type="text" class="form-control" id="name" placeholder="Name" required>
+                      <div class="invalid-feedback">Please enter your name.</div>
+                  </div>
+                  <div class="mb-3">
+                      <label for="Phone" class="form-label">Phone Number</label>
+                      <input type="text" class="form-control" id="Phone" placeholder="Phone Number" required>
+                      <div class="invalid-feedback">Please enter your phone number.</div>
+                  </div>
+                  <div class="mb-3">
+                      <label for="Purpose" class="form-label">Purpose</label>
+                      <input type="text" class="form-control" id="Purpose" placeholder="Purpose" required>
+                      <div class="invalid-feedback">Please enter the purpose.</div>
+                  </div>
+                  <div class="mb-3">
+                      <label for="email" class="form-label">Email address</label>
+                      <input type="email" class="form-control" id="email" placeholder="email@example.com" required>
+                      <div class="invalid-feedback">Please enter a valid email address.</div>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" id="download-pdf" class="btn btn-primary">Download</button>
+              </div>
           </div>
-          <div class="modal-body">
-            <div class="mb-3">
-              <label for="name" class="form-label">Name</label>
-              <input type="text" class="form-control" id="name" placeholder="Name" required>
-            </div>
-            <div class="mb-3">
-              <label for="Phone" class="form-label">Phone Number</label>
-              <input type="text" class="form-control" id="Phone" placeholder="Phone Number" required>
-            </div>
-            <div class="mb-3">
-              <label for="name" class="form-label">Purpose</label>
-              <input type="text" class="form-control" id="Purpose" placeholder="Purpose" required>
-            </div>
-            <div class="mb-3">
-              <label for="name" class="form-label">Email address</label>
-              <input type="email" class="form-control" id="name" placeholder="email@example.com" required>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" id="download-pdf" class="btn btn-primary">Download</button>
-          </div>
-        </div>
       </form>
+      
       <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Reference the form and download button
-            const form = document.getElementById('download-form');
-            const downloadBtn = document.getElementById('download-pdf');
-    
-            // Add a click event listener to the download button
-            downloadBtn.addEventListener('click', function () {
-                // Validate the form before triggering the download
-                if (form.checkValidity()) {
-                    // Create a download link for the PDF
-                    const downloadLink = document.createElement('a');
-                    downloadLink.href = '/assets/pdf/ecomount-presentation.pdf'; // Replace with the actual path to your PDF file
-                    downloadLink.download = 'ecomount-profile.pdf'; // Set the desired filename for the downloaded file
-    
-                    // Trigger a click event on the download link to initiate the download
-                    downloadLink.click();
-                } else {
-                    // If the form is not valid, you can display an error message or take other actions.
-                    alert('Please fill in all required fields correctly.');
-                }
-            });
-        });
-    </script>
+          document.addEventListener('DOMContentLoaded', function () {
+              // Reference the form and download button
+              const form = document.getElementById('download-form');
+              const downloadBtn = document.getElementById('download-pdf');
+      
+              // Add a click event listener to the download button
+              downloadBtn.addEventListener('click', function () {
+                  // Check each required field individually
+                  const nameField = document.getElementById('name');
+                  const phoneField = document.getElementById('Phone');
+                  const purposeField = document.getElementById('Purpose');
+                  const emailField = document.getElementById('email');
+      
+                  // Initialize error message flags
+                  let hasErrors = false;
+      
+                  // Validate Name
+                  if (nameField.value.trim() === '') {
+                      nameField.classList.add('is-invalid');
+                      hasErrors = true;
+                  } else {
+                      nameField.classList.remove('is-invalid');
+                  }
+      
+                  // Validate Phone Number
+                  if (phoneField.value.trim() === '') {
+                      phoneField.classList.add('is-invalid');
+                      hasErrors = true;
+                  } else {
+                      phoneField.classList.remove('is-invalid');
+                  }
+      
+                  // Validate Purpose
+                  if (purposeField.value.trim() === '') {
+                      purposeField.classList.add('is-invalid');
+                      hasErrors = true;
+                  } else {
+                      purposeField.classList.remove('is-invalid');
+                  }
+      
+                  // Validate Email
+                  if (emailField.value.trim() === '' || !isValidEmail(emailField.value)) {
+                      emailField.classList.add('is-invalid');
+                      hasErrors = true;
+                  } else {
+                      emailField.classList.remove('is-invalid');
+                  }
+      
+                  if (hasErrors) {
+                      // If there are errors, prevent the download and show an error message.
+                      alert('Please fill in all required fields correctly.');
+                  } else {
+                      // Create a download link for the PDF
+                      const downloadLink = document.createElement('a');
+                      downloadLink.href = '/assets/pdf/ecomount-presentation.pdf'; // Replace with the actual path to your PDF file
+                      downloadLink.download = 'ecomount-profile.pdf'; // Set the desired filename for the downloaded file
+      
+                      // Trigger a click event on the download link to initiate the download
+                      downloadLink.click();
+                  }
+              });
+          });
+      
+          // Function to validate email format
+          function isValidEmail(email) {
+              const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+              return emailRegex.test(email);
+          }
+      </script>
       <!-- <a href="assets/pdf/ecomount-presentation.pdf"></a> -->
 
   <!-- <script>
